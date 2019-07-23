@@ -2,6 +2,7 @@ package com.mvc.controllers;
 
 import java.sql.Blob;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
 
@@ -14,6 +15,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.mvc.data.Farmer;
 import com.mvc.data.FarmerRepository;
+import com.mvc.data.Flower;
+import com.mvc.data.FlowerRepository;
+import com.mvc.data.Monthly;
 import com.mvc.data.OrderList;
 import com.mvc.data.OrderListRepository;
 import com.mvc.data.Orders;
@@ -31,6 +35,10 @@ public class AdminController {
 	UserRepository repo1;
 	@Autowired
 	FarmerRepository fam;
+	@Autowired
+	FlowerRepository flo;
+	@Autowired
+	OrderListRepository ord;
 
 
 	@RequestMapping(value = "/home")
@@ -56,7 +64,7 @@ public class AdminController {
 		return "confirmfarmers";
 	}
 	@RequestMapping(value = "/confirmsave/{id}")
-	public String confirmfarmer(Model model,@PathVariable int id) {
+	public String confirmfarmer(Model model,@PathVariable String id) {
 		Users user=repo1.findOne(id);
 		user.setRole("ROLE_FARMER");
 		repo1.save(user);
@@ -96,5 +104,42 @@ public class AdminController {
 		model.addAttribute("farmerslist", farmers);
 		return "farmers";
 	}
+	@RequestMapping(value = "/customer")
+	public String customers(Model model) {
+		List<Users> farmers=repo1.findTop10ByOrderByShoppingTimesDesc();
+		System.out.println(farmers);
+		model.addAttribute("customer", farmers);
+		return "topCustomer";
+	}
+	@RequestMapping(value = "/topproduct")
+	public String topproduct(Model model) {
+		List<Flower> farmers=flo.findTop10ByOrderByBoughtTimesDesc();
+		System.out.println(farmers);
+		model.addAttribute("topflowers", farmers);
+		return "topFlower";
+	}
+	@RequestMapping(value = "/monthlysales")
+	public String monthlysales(Model model) {
+		//Sales of Jan
+		
+		List<Monthly> mon=new ArrayList<>();
+		
+		for(int i=0;i<12;i++) {
+			List<OrderList> monthly=ord.findByMonth(i);
+			double sales=0;
+			for(OrderList of:monthly) {
+				sales+=of.getAmount();
+				}
+			Monthly l=new Monthly();
+			l.setMonth(i);
+			l.setSales(sales);
+			mon.add(l);	
+			
+		}
+		System.out.println(mon);
+		model.addAttribute("monthlysales", mon);
+		return "month";
+		}
+	
 }
 

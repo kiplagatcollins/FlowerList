@@ -16,15 +16,17 @@
         <th>Farmers license</th>
         <th>Farmers Names</th>
         <th>Email</th>
+        <th>Address</th>
       </tr>
     </thead>
     <tbody>
     <c:forEach items="${farmers}" var="farmer">
     <c:if test="${farmer.confirmed==0 }">
       <tr>
-        <td><img src="data:image/jpg;base64,${farmer.base64image}"  alt="${farmer.farmersName }" width=50px; height=50px /></td>
+        <td><img src="data:image/jpg;base64,${farmer.base64image}"  alt="${farmer.farmersName }" width=250px; height=250px /></td>
         <td>${farmer.farmersName }</td>
-        <td>john@example.com</td>
+        <td>${farmer.email }</td>
+        <td>${farmer.address }</td>
         <td><a href='<spring:url value="/admin/confirmsave/${farmer.userId }"/>'>confirm</a></td>
       </tr>
       </c:if>

@@ -19,25 +19,47 @@ public class Farmer {
 	private int id;
 	@Column(name="image")
 	private Blob image;
+	private String email;
+	private String address;
 	@Transient
 	private MultipartFile file;
 	@Transient
 	private String base64image;
 	private int confirmed=0;
-	private int userId;
+	private String userId;
 	private String farmersName;
+	@Transient
+	private String company;
 	
 	
+	public String getCompany() {
+		return company;
+	}
+	public void setCompany(String company) {
+		this.company = company;
+	}
+	public String getEmail() {
+		return email;
+	}
+	public void setEmail(String email) {
+		this.email = email;
+	}
+	public String getAddress() {
+		return address;
+	}
+	public void setAddress(String address) {
+		this.address = address;
+	}
 	public String getFarmersName() {
 		return farmersName;
 	}
 	public void setFarmersName(String farmersName) {
 		this.farmersName = farmersName;
 	}
-	public int getUserId() {
+	public String getUserId() {
 		return userId;
 	}
-	public void setUserId(int userId) {
+	public void setUserId(String userId) {
 		this.userId = userId;
 	}
 	public int getConfirmed() {
@@ -75,9 +97,10 @@ public class Farmer {
 
 	@Override
 	public String toString() {
-		return "Farmer [id=" + id + ", image=" + image + ", file=" + file + ", base64image=" + base64image
-				+ ", confirmed=" + confirmed + ", userId=" + userId + ", farmersName=" + farmersName + "]";
+		return "Farmer [id=" + id + ", image=" + image + ", email=" + email + ", address=" + address + ", file=" + file
+				+ ", base64image=" + base64image + ", confirmed=" + confirmed + ", userId=" + userId + ", farmersName="
+				+ farmersName + "]";
 	}
-
+	
 		
 }

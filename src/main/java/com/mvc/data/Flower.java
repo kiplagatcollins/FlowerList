@@ -37,9 +37,19 @@ public class Flower {
 	private String base64image;
 	private int sold;
 	private int deleted;
+	@Column(name="type")
+	private String type;
+	private int boughtTimes;
+	private String company;
 	
 	
 	
+	public String getCompany() {
+		return company;
+	}
+	public void setCompany(String company) {
+		this.company = company;
+	}
 	public int getDeleted() {
 		return deleted;
 	}
@@ -108,16 +118,27 @@ public class Flower {
 	public void setBase64image(String base64image) {
 		this.base64image = base64image;
 	}
+	
+	public String getType() {
+		return type;
+	}
+	public void setType(String type) {
+		this.type = type;
+	}
+	
+	public int getBoughtTimes() {
+		return boughtTimes;
+	}
+	public void setBoughtTimes(int boughtTimes) {
+		this.boughtTimes = boughtTimes;
+	}
 	@Override
 	public String toString() {
 		return "Flower [flowerId=" + flowerId + ", name=" + name + ", quantity=" + quantity + ", price=" + price
 				+ ", description=" + description + ", image=" + image + ", file=" + file + ", farmersName="
-				+ farmersName + ", base64image=" + base64image + ", sold=" + sold + ", deleted=" + deleted + "]";
+				+ farmersName + ", base64image=" + base64image + ", sold=" + sold + ", deleted=" + deleted + ", type="
+				+ type + "]";
 	}
-	
-	
-	
-	
 	
 
 }

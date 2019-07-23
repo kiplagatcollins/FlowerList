@@ -2,12 +2,14 @@ package com.mvc.controllers;
 
 import java.sql.Blob;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.sql.rowset.serial.SerialBlob;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.StandardPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -29,6 +31,7 @@ public class UserController {
 	UserRepository repo;
 	@Autowired
 	FarmerRepository fam;
+
 	@RequestMapping(value="/register",method=RequestMethod.GET)
 	public String registerUser() {
 		return "register";
@@ -43,11 +46,17 @@ public class UserController {
 			
 		} else{
 			//user.setRole("ROLE_FARMER");
+			StandardPasswordEncoder encoder=new StandardPasswordEncoder();
+			String pass=encoder.encode(user.getPassword());
+			user.setPassword(pass);		
 			repo.save(user);
 			model.addAttribute("user", user);
 			return "confirmform";
 
 		}
+		StandardPasswordEncoder encoder=new StandardPasswordEncoder();
+		String pass=encoder.encode(user.getPassword());
+		user.setPassword(pass);
 		repo.save(user);
 		Authentication auth= new UsernamePasswordAuthenticationToken(user, user.getPassword(),user.getAuthorities());
 		SecurityContextHolder.getContext().setAuthentication(auth);
@@ -56,25 +65,66 @@ public class UserController {
 	
 	@RequestMapping(value="/login", method=RequestMethod.GET)
 	public String login() {
+		
 		return "login";
 		
 	}
-	@RequestMapping(value="/update")
-	public String update() {
-		return "register";
+	@RequestMapping(value="/update", method=RequestMethod.GET)
+	public String update(Users user,Model model ) {
+		String customerName=SecurityContextHolder.getContext().getAuthentication().getName();
+		user=repo.findOne(customerName);
+		model.addAttribute("userdetail", user);
+		return "update";
+	}
+	@RequestMapping(value="/update", method=RequestMethod.POST)
+	public String updatesave(Users user,HttpServletRequest req) {
+		String email=req.getParameter("email");
+		String address=req.getParameter("address");
+		String phone=req.getParameter("phone");
+		String customerName=SecurityContextHolder.getContext().getAuthentication().getName();
+		user=repo.findOne(customerName);
+		user.setAddress(address);
+		user.setEmail(email);
+		user.setPhoneNo(phone);
+		repo.save(user);
+		return "redirect:/";
 	}
 	
 
 	@RequestMapping(value = "/save",method=RequestMethod.POST)
-	public String confirmform(@ModelAttribute Farmer farmer,@ModelAttribute ("user") Users user ) throws Exception {
+	public String confirmform(@ModelAttribute Farmer farmer, @ModelAttribute ("user") Users user ) throws Exception {
 		System.out.println(user);
-		farmer.setUserId(user.getUserId());
+		farmer.setUserId(user.getUsername());
 		MultipartFile file=farmer.getFile();
 	    byte[] ibyte=file.getBytes();	
 	    Blob blob=new SerialBlob(ibyte);
 	    farmer.setImage(blob);
+	    farmer.setEmail(user.getEmail());
+	    farmer.setAddress(user.getAddress());
+	    user.setCompany(farmer.getCompany());
 	    farmer.setFarmersName(user.getFirstname()+" "+user.getLastName());
+	    repo.save(user);
 		fam.save(farmer);
 		return "redirect:/";
 	}
+	@RequestMapping(value="/guide")
+	public String help() {
+		return "guide";
+	}
+	@RequestMapping(value="/aboutus")
+	public String about( ) {
+		return "about";
+	}
+	@RequestMapping(value="/about/register")
+	public String aboutre() {
+		return "aboutregister";	
+		}
+	
+	
+		@RequestMapping(value="/about/item")
+		public String aboutitem() {
+			return "aboutitem";		
+		}
+	
+	
 }

@@ -3,9 +3,9 @@ package com.mvc.controllers;
 import java.sql.Blob;
 import java.util.Base64;
 import java.util.Collection;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
@@ -14,21 +14,31 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.SessionAttributes;
 
 import com.mvc.data.Flower;
 import com.mvc.data.FlowerRepository;
+import com.mvc.data.UserRepository;
+import com.mvc.data.Users;
 
 @Controller
+@SessionAttributes("user")
 public class HomeController {
 	
 	@Autowired
 	FlowerRepository repo;
+	@Autowired
+	UserRepository users;
 	@RequestMapping(value="/")
-	public String goHome(Model model, Pageable pageable) throws Exception {
+	public String goHome(Model model, Pageable pageable,Users user) throws Exception {
+		String customerName=SecurityContextHolder.getContext().getAuthentication().getName();
+		
+		user=users.findOne(customerName);
+		System.out.println(user);
 	Collection<? extends GrantedAuthority> role=SecurityContextHolder.getContext().getAuthentication().getAuthorities();
 	System.out.println(role);
 
-	Page<Flower> flowers=repo.findAll(pageable);
+	List<Flower> flowers=repo.findAll();
 	for (Flower flower : flowers) {
 		Blob image=flower.getImage();
 		int bloblength=(int) image.length(); 
@@ -43,7 +53,7 @@ public class HomeController {
 		} else {
 			for(GrantedAuthority r:role) {
 				if(r.getAuthority().equalsIgnoreCase("ROLE_ADMIN")) {
-					return "redirect:/admin/home";
+					return "redirect:/admin/confirm";
 				}else{
 					
 					return "home";
@@ -65,7 +75,7 @@ public class HomeController {
 		public String confirm() {
 			return "confirm";
 			}
-		
+
 		
 	}
 

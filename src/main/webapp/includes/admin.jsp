@@ -11,25 +11,41 @@
 			<title>Florist</title>
 			<link rel="stylesheet"
 				href='<spring:url value="/resources/css/bootstrap.min.css"></spring:url>'>
+				<link rel="stylesheet"
+				href='<spring:url value="/resources/css/datatables.min.css"></spring:url>'>
 			<link rel="stylesheet"
 				href='<spring:url value="/resources/css/w3.css"></spring:url>'>
 			<link rel="stylesheet"
 				href='<spring:url value="/resources/css/style.css"></spring:url>'>
+				<link rel="stylesheet"
+				href='<spring:url value="/resources/css/jquery.dataTables.min.css"></spring:url>'>
 			<link rel="stylesheet"
 				href='<spring:url value="/resources/css/font-awesome.min.css"></spring:url>'>
+			<link rel="stylesheet" 	href='<spring:url value="/resources/css/buttons.dataTables.min.css"></spring:url>'>
 			<script src='<spring:url value="/resources/js/jquery.js"></spring:url>'></script>
 			<script	src='<spring:url value="/resources/js/bootstrap.min.js"></spring:url>'></script>
-				<script src='<spring:url value="/resources/js/jquery.validate.js"></spring:url>'></script>
+			<script src='<spring:url value="/resources/js/jquery.dataTables.min.js"></spring:url>'></script>
+			<script src='<spring:url value="/resources/js/jquery.validate.js"></spring:url>'></script>
 			<script src='<spring:url value="/resources/js/additional-methods.js"></spring:url>'></script>
-			<script src='<spring:url value="/resources/js/home.js"></spring:url>'></script>
-
+			<script src='<spring:url value="/resources/js/home.js"></spring:url>'></script>	
+			<script type="text/javascript" src='<spring:url value="/resources/js/buttons.print.min.js"></spring:url>'></script>		
+			<script type="text/javascript" src='<spring:url value="/resources/js/buttons.html5.min.js"></spring:url>'></script>
+			<link rel="stylesheet" href="http://cdn.datatables.net/1.10.13/css/jquery.dataTables.min.css">
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+   				 <script src="https://cdn.datatables.net/1.10.13/js/jquery.dataTables.min.js"></script>
+			<script src='<spring:url value="/resources/js/dataTables.buttons.min.js"></spring:url>'></script>
 </head>
+<script>
+$(document).ready(function(){
+$('#myTable1').DataTable();
+});
+</script>
 <div class="w3-bar w3-border w3-dark-grey adminhead w3-middle">
-	  <a href='<spring:url value="/admin/home"/>' class="w3-bar-item w3-button w3-green">Flower Shop Admin</a>
 	  <a href='<spring:url value="/admin/confirm"/>' class="w3-bar-item w3-button">Confirm Farmers</a>
 	  <a href='<spring:url value="/admin/list"/>' class="w3-bar-item w3-button">Confirm orders</a>
 	  <a href='<spring:url value="/admin/farmers"/>'class="w3-bar-item w3-button">Farmers</a>
-	  <a href="#" class="w3-bar-item w3-button w3-right">Dashboard</a>
+	  <a href='<spring:url value="/admin/topproduct"/>'class="w3-bar-item w3-button">Top Products</a>
+	  <a href='<spring:url value="/admin/customer"/>'class="w3-bar-item w3-button">Top Customers</a>
 
  <sec:authorize access="authenticated" var="authenticated" />
  <c:choose>

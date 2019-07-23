@@ -21,8 +21,8 @@
   </c:forEach>
   </tbody>
 </table>
-		<a href='<spring:url value="/admin/list"/>' class="w3-bar-item w3-button btn">  Go Back</a>
-		<a href='<spring:url value="/admin/deliver/${orderlist.orderNumber }"/>' class="w3-bar-item w3-button w3-right">Confirm Delivery</a>
+		<a href='<spring:url value="/admin/list"/>' class="w3-bar-item w3-button w3-blue"> << Go Back</a>
+		<a href='<spring:url value="/admin/deliver/${orderlist.orderNumber }"/>' class="w3-bar-item w3-button w3-right w3-green">Confirm Delivery</a>
 </div>
 </div>
 <footer class="footer">

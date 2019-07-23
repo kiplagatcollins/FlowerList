@@ -21,7 +21,7 @@
                        		<p class="alert alert-success">You have logged out successfully</p>
                           </c:if>
                        <c:if test="${param.error !=null }">
-                       		<p class="alert alert-danger">Invalid username and password</p>
+                       		<p class="alert alert-danger">Invalid username or password</p>
                        </c:if>
 
                         <button class="btn btn-success w3-large w3-right w3-small">Login</button>

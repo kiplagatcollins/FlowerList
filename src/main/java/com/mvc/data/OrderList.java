@@ -28,8 +28,15 @@ public class OrderList {
 	private double amount;
 	private int confirmed=0;
 	private Date orderDate;
+	private int month;
 	
 	
+	public int getMonth() {
+		return month;
+	}
+	public void setMonth(int month) {
+		this.month = month;
+	}
 	public int getConfirmed() {
 		return confirmed;
 	}

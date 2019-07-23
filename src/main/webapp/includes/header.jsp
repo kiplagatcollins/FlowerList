@@ -16,11 +16,14 @@
 			<link rel="stylesheet"
 				href='<spring:url value="/resources/css/style.css"></spring:url>'>
 			<link rel="stylesheet"
+				href='<spring:url value="/resources/css/datatables.min.css"></spring:url>'>
+			<link rel="stylesheet"
 				href='<spring:url value="/resources/css/font-awesome.min.css"></spring:url>'>
 			<script src='<spring:url value="/resources/js/jquery.js"></spring:url>'></script>
 			<script	src='<spring:url value="/resources/js/bootstrap.min.js"></spring:url>'></script>
 				<script src='<spring:url value="/resources/js/jquery.validate.js"></spring:url>'></script>
 			<script src='<spring:url value="/resources/js/additional-methods.js"></spring:url>'></script>
+			<script src='<spring:url value="/resources/js/datatables.min.js"></spring:url>'></script>
 			<script src='<spring:url value="/resources/js/home.js"></spring:url>'></script>
 
 </head>
@@ -67,7 +70,7 @@
 
 				<sec:authorize access='hasRole("ROLE_CUSTOMER")'>
 				 <li class="w3-bar-item w3-right"><a href='<spring:url value="/user/update" />'>Personal Information</a></li>
-				 <li class="w3-bar-item"><a href='<spring:url value="/flower/customer/find" />'>Flowers</a></li>
+				 <!--  <li class="w3-bar-item"><a href='<spring:url value="/flower/customer/find" />'>Flowers</a></li>-->
 					<li class="w3-bar-item w3-right"><a href='<spring:url value="/flower/customer/yourorders"/>'>Your Order</a></li>
 					<li class="w3-bar-item w3-right "><i
 						class="fa fa-shopping-cart "
@@ -76,24 +79,32 @@
 
 				</sec:authorize>
 					<sec:authorize access='hasRole("ROLE_FARMER")'>
-				 <li class="w3-bar-item w3-right"><a href='<spring:url value="/user/update" />'>Personal Information</a></li>
-					<li class="w3-bar-item w3-right"><a href='<spring:url value="/flower/customer/yourorders"/>'>Your Order</a></li>
+					<li class="w3-bar-item"><a href='<spring:url value="/flower/customer/yourorders"/>'>Your Order</a></li>
 					<li class="w3-bar-item w3-right ">${cartsize }<i
 						class="fa fa-shopping-cart "
 						style="font-size: 25px; margin-right: 5px;"></i><a
 						href='<spring:url value="/flower/customer/cart"/>'>Cart</a></li>
+				 <div class="w3-dropdown-hover">
+					  <button class="w3-button">Help</button>
+					  <div class="w3-dropdown-content w3-bar-block w3-border">
+					  <a href='<spring:url value="/user/guide" />'class="w3-bar-item w3-button">Help Contents</a>
+					  <a href='<spring:url value="/user/aboutus" />' class="w3-bar-item w3-button">About Us</a>
+					 </div>
+					 </div>
 
 				</sec:authorize>
 
 				
 
 				<sec:authorize access='hasRole("ROLE_FARMER")'>
-					<li class="w3-bar-item w3-right"><a
-						href='<spring:url value="/flower/farmer/add" />'>Create
-							Product</a></li>
-					<li class="w3-bar-item w3-right"><a
-						href='<spring:url value="/flower/farmer/products" />'>Products
-							List</a></li>
+					<li class="w3-bar-item w3-right"><a href='<spring:url value="/user/update" />'>Personal Information</a></li>
+					<div class="w3-dropdown-hover w3-right">
+					  <button class="w3-button">Farmers Dashboard</button>
+					  <div class="w3-dropdown-content w3-bar-block w3-border">
+					  <a href='<spring:url value="/flower/farmer/products" />'class="w3-bar-item w3-button">Products List</a>
+					  <a href='<spring:url value="/flower/farmer/add" />' class="w3-bar-item w3-button">Create Product</a>
+					 </div>
+					 </div>
 				</sec:authorize>
 			</ul>
 

@@ -12,7 +12,7 @@
       <li class="active"><a href="#">${user.firstname }</a></li>
       <li><a href="#">${user.lastname }</a></li>
       <li><a href="#">${user.email }</a></li> 
-      <li><a href="#"></a></li> 
+      <li><a href="#" class="text-center">lo</a></li> 
     </ul>
   </nav>
    
@@ -25,9 +25,11 @@
 				</div>
 				<div class="col-sm-6">
 					<input name="file" id="file" class="form-control" type="file" width="25" required>
+					<label>Company Name:</label>
+					<input name="company" id="company" class="form-control" type="text" required>
 				</div>
 				<div class="col-sm-3">
-					<button>Save</button>
+					<button class="btn btn-success">Save</button>
 				</div>
 		</div>
 		</form>

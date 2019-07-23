@@ -22,7 +22,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.ModelAndView;
 
 import com.mvc.data.Flower;
 import com.mvc.data.FlowerRepository;
@@ -54,21 +53,25 @@ public class FlowerController {
 	public String addFlower() {
 		return "addflower";
 	}
+	//Method for saving the flower controller
 
 	@RequestMapping(value = "/farmer/add", method=RequestMethod.POST)
 	public String saveFlower(@ModelAttribute Flower flower ) throws Exception {
 		String username=SecurityContextHolder.getContext().getAuthentication().getName();
+		Users us=user1.findOne(username);
 		
+		System.out.println(flower);
 		MultipartFile file=flower.getFile();
 	    byte[] ibyte=file.getBytes();	
 	    Blob blob=new SerialBlob(ibyte);
 	    flower.setImage(blob);
 		flower.setFarmersName(username);
+		flower.setCompany(us.getCompany());
 		repo.save(flower);		
-		return "addflower";
+		return "redirect:/flower/farmer/products";
 	}
 	
-	
+	//Method for showing the flower in for every farmer
 	@RequestMapping(value="/farmer/products")
 	public String products(Model model,Pageable pageable) throws Exception {
 		String farmersName=SecurityContextHolder.getContext().getAuthentication().getName();
@@ -92,13 +95,7 @@ public class FlowerController {
 		repo.save(flower);
 		return "redirect:/flower/farmer/products";
 	}
-	@RequestMapping(value="/farmer/edit")
-	public String edit(@RequestParam int id,@ModelAttribute Flower flower) {
-		ModelAndView nav=new ModelAndView("edit-flower");
-		flower=repo.findOne(id);
-		nav.addObject("flower", flower);
-		return "redirect:/flower/farmer/products";
-	} 
+
 	
 	@RequestMapping(value="/customer/find")
 	public String findFlowers(Model model) throws Exception {
@@ -142,8 +139,7 @@ public class FlowerController {
 	public String buy(@PathVariable int id,Model model,@ModelAttribute Item item,HttpServletRequest request) {
 		HttpSession session = request.getSession();
 		int itemquantity=item.getItemquantity();
-		if(session.getAttribute("cart") == null) {
-			
+		if(session.getAttribute("cart") == null) {			
 			List<Item> cart = new ArrayList<Item>();
 			int i=cart.size();
 			System.out.println("cartsize"+i);
@@ -161,8 +157,7 @@ public class FlowerController {
 				cart.get(index).setItemquantity(itemquantity);
 
 			}
-			int cartsize=cart.size();
-					
+			int cartsize=cart.size();		
 			System.out.println();
 			model.addAttribute("cartsize", cartsize);
 			model.addAttribute("cart", cart);
@@ -192,6 +187,9 @@ public class FlowerController {
 	public String orders(HttpSession session,Model model) {
 		String customerName=SecurityContextHolder.getContext().getAuthentication().getName();
 		Users user=user1.findByUsername(customerName);
+		int times=user.getShoppingTimes()+1;
+		user.setShoppingTimes(times);
+		user1.save(user);
 		List<Orders> orders=new ArrayList<>();
 		double amount = 0;
 		int sold=0;
@@ -208,6 +206,9 @@ public class FlowerController {
 			amount+=total;			
 			int id=order.getFlower().getFlowerId();
 			Flower flower=repo.findOne(id);
+			int time1=flower.getBoughtTimes()+1;
+			flower.setBoughtTimes(time1);
+			
 			sold=flower.getSold()+itemQuantity;
 			flower.setSold(sold);
 			int newQuantity=(flower.getQuantity())-itemQuantity;
@@ -222,7 +223,11 @@ public class FlowerController {
 		list.setAmount(amount);
 		model.addAttribute("amount", amount);
 		list.setCustomerName(customerName);
-		list.setOrderDate(new Date());
+		Date d= new Date();
+		@SuppressWarnings("deprecation")
+		int month=d.getMonth();
+		list.setMonth(month);
+		list.setOrderDate(d);
 		repo2.save(list);
 		cart.clear();
 		return "redirect:/";
@@ -247,13 +252,54 @@ public class FlowerController {
     	model.addAttribute("viewlist", viewlist);
 		return "vieworders"; 
      }
-     @RequestMapping(value="/customer/clear")
-     public String removecart(HttpSession session) {
+     @RequestMapping(value="/customer/clear/{id}")
+     public String removecart(@PathVariable int id,HttpSession session) {
     	 @SuppressWarnings("unchecked")
 		List<Item> cart =(List<Item>)session.getAttribute("cart");
-    	 cart.clear();
+    	 int index=isExisting(id, cart);
+    	 cart.remove(index);
     	 return "cart";
      }
- 
+     //Getting the edit form
+     @RequestMapping(value="/update/{id}")    
+     public String editForm(@PathVariable int id, Model model) throws Exception{    
+         Flower flower=repo.findOne(id);  
+         Blob image=flower.getImage();
+ 		int bloblength=(int) image.length();
+ 		
+
+ 		byte[] b=image.getBytes(1, bloblength);
+ 		String baseImage =Base64.getEncoder().encodeToString(b);
+ 		flower.setBase64image(baseImage);
+        model.addAttribute("command",flower);  
+        return "edit-flower";    
+     } 
+     
+ 	@RequestMapping(value = "/farmer/update/{id}", method=RequestMethod.POST)
+ 	public String updateFlower(@ModelAttribute  ("flower") Flower flower,@PathVariable int id ) throws Exception {
+ 		String username=SecurityContextHolder.getContext().getAuthentication().getName();
+ 		Flower f=repo.findOne(id);
+ 		System.out.println(f);
+ 		MultipartFile file=flower.getFile();
+ 	    byte[] ibyte=file.getBytes();	
+ 	    Blob blob=new SerialBlob(ibyte);
+ 	    flower.setImage(blob);
+ 		flower.setFarmersName(username);
+ 		repo.save(flower);		
+ 		return "redirect:/flower/farmer/products";
+ 	}
+ 	
+ 	  @RequestMapping(value="/customer/updatec", method=RequestMethod.POST)    
+      public String update(@PathVariable int id, Model model,HttpSession session,HttpServletRequest request) throws Exception{    
+ 		 @SuppressWarnings("unchecked")
+		List<Item> cart =(List<Item>)session.getAttribute("cart");
+ 		String []q=request.getParameterValues("q");
+ 		for (int i = 0; i < cart.size(); i++) {
+ 			cart.get(i).setItemquantity(Integer.parseInt(q[i]));			
+		}
+ 		model.addAttribute("cart", cart);
+         return "redirect:/flowers/customer/cart";    
+      } 
+
 
 }

@@ -1,37 +1,29 @@
 package com.mvc.data;
 
-import java.sql.Blob;
 import java.util.Collection;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.web.multipart.MultipartFile;
 
 @SuppressWarnings("serial")
 @Entity
 @Table(name="users")
 public class Users implements UserDetails{
 	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	@Column(name="userId")
-	private int userId;
+	@Column(name="username")
+	private String username;
 	@Column(name="firstName")
 	private String firstName;
 	@Column(name="lastName")
 	private String lastName;
 	@Column(name="email")
-	private String email;
-	@Column(name="username")
-	private String username;
+	private String email;	
 	@Column(name="role")
 	private String role;
 	@Column(name="phoneNumber")
@@ -42,44 +34,39 @@ public class Users implements UserDetails{
 	private String address;
 	@Column(name="DOB")
 	private String DOB;
-	@Column(name="image")
-	private Blob image;
-	@Transient
-	private MultipartFile file;
-	@Transient
-	private String base64image;
+	private String company;
+	private int shoppingTimes;
 
-	
 	//Getters and setters	
-	
 	public String getFirstname() {
 		return firstName;
 	}
-	public Blob getImage() {
-		return image;
-	}
-	public void setImage(Blob image) {
-		this.image = image;
-	}
-	public MultipartFile getFile() {
-		return file;
-	}
-	public void setFile(MultipartFile file) {
-		this.file = file;
-	}
-	public String getBase64image() {
-		return base64image;
-	}
-	public void setBase64image(String base64image) {
-		this.base64image = base64image;
-	}
-	public int getUserId() {
-		return userId;
+	
+	public int getShoppingTimes() {
+		return shoppingTimes;
 	}
 
-	public void setUserId(int userId) {
-		this.userId = userId;
+
+
+
+
+	public void setShoppingTimes(int shoppingTimes) {
+		this.shoppingTimes = shoppingTimes;
 	}
+
+
+
+
+
+	public String getCompany() {
+		return company;
+	}
+
+
+	public void setCompany(String company) {
+		this.company = company;
+	}
+
 
 	public String getPhoneNumber() {
 		return phoneNumber;
@@ -156,9 +143,9 @@ public class Users implements UserDetails{
 	}
 	@Override
 	public String toString() {
-		return "Users [userId=" + userId + ", firstName=" + firstName + ", lastName=" + lastName + ", email=" + email
-				+ ", username=" + username + ", role=" + role + ", phoneNumber=" + phoneNumber + ", password="
-				+ password + ", address=" + address + ", DOB=" + DOB + "]";
+		return "Users [username=" + username + ", firstName=" + firstName + ", lastName=" + lastName + ", email="
+				+ email + ", role=" + role + ", phoneNumber=" + phoneNumber + ", password=" + password + ", address="
+				+ address + ", DOB=" + DOB + "]";
 	}
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -186,5 +173,7 @@ public class Users implements UserDetails{
 		return true;
 	}
 
+
+	
 	
 }
